@@ -1,7 +1,10 @@
 {
     "files": [
+        ".github/workflows/changelog.yml",
         ".github/workflows/ci.yml",
         ".github/workflows/issues.yml",
+        ".github/workflows/nuget.yml",
+        ".github/workflows/release.yml",
         ".github/workflows/sync.yml",
         ".husky/commit-msg",
         ".vscode/extensions.json",

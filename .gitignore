@@ -11,6 +11,9 @@ node_modules/
 # Build output
 dist
 build/
+bin/
+obj/
+artifacts/
 *.tsbuildinfo
 
 # Yarn

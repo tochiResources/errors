@@ -1,12 +1,5 @@
 import { defineConfig } from 'vite-plus';
 
-/**
- * Vite+ configuration for `@tochii/errors`.
- *
- * One file drives Oxfmt (`fmt`), Oxlint (`lint`) and Vitest (`test`). The
- * `fmt`/`lint` values were produced by
- * `dbx migrate --from biome --target vite`.
- */
 export default defineConfig({
     test: {
         environment: 'node',

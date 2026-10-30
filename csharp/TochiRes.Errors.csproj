@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+        <PackageJsonPath>$(MSBuildThisFileDirectory)../package.json</PackageJsonPath>
+
+        <PackageJsonVersion>$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(PackageJsonPath)')), '"version"\s*:\s*"([^"]+)"').Groups[1].Value)</PackageJsonVersion>
+        <PackageJsonDescription>$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(PackageJsonPath)')), '"description"\s*:\s*"([^"]*)"').Groups[1].Value)</PackageJsonDescription>
+        <PackageJsonRepositoryUrl>$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(PackageJsonPath)')), '"repository"\s*:\s*\{[^}]*"url"\s*:\s*"(?:git\+)?(https?://[^"]+?)(?:\.git)?"').Groups[1].Value)</PackageJsonRepositoryUrl>
+        <PackageJsonAuthor>$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(PackageJsonPath)')), '"author"\s*:\s*"([^"]*)"').Groups[1].Value)</PackageJsonAuthor>
+        <PackageJsonLicense>$([System.Text.RegularExpressions.Regex]::Match($([System.IO.File]::ReadAllText('$(PackageJsonPath)')), '"license"\s*:\s*"([^"]*)"').Groups[1].Value)</PackageJsonLicense>
+
+        <PackageId>TochiRes.Errors</PackageId>
+        <Version>$(PackageJsonVersion)</Version>
+        <Authors>$(PackageJsonAuthor)</Authors>
+        <Description>$(PackageJsonDescription)</Description>
+        <PackageLicenseExpression>$(PackageJsonLicense)</PackageLicenseExpression>
+        <RepositoryUrl>$(PackageJsonRepositoryUrl)</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageProjectUrl>$(PackageJsonRepositoryUrl)</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>errors;exceptions;error-codes</PackageTags>
+
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../README.md" Pack="true" PackagePath="\" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.403" PrivateAssets="all" />
+    </ItemGroup>
+</Project>
