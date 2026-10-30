@@ -15,7 +15,7 @@ export default defineConfig({
             scope: '@tochii',
             author: 'T0chi',
             license: 'MIT',
-            description: 'Shared typed errors and stable error codes (TypeScript + C#).',
+            description: 'Shared typed errors and stable error codes used in official tochiResources proejcts.',
             nodeVersion: '22',
             packageManager: 'yarn',
             packageManagerVersion: '4.17.1',
