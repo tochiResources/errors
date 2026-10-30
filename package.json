@@ -5,6 +5,7 @@
     "license": "MIT",
     "author": "T0chi",
     "type": "module",
+    "private": false,
     "repository": {
         "type": "git",
         "url": "git+https://github.com/tochiResources/errors.git"
