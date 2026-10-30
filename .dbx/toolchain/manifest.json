@@ -1,0 +1,12 @@
+{
+    "files": [
+        ".github/workflows/ci.yml",
+        ".github/workflows/issues.yml",
+        ".github/workflows/sync.yml",
+        ".husky/commit-msg",
+        ".vscode/extensions.json",
+        ".vscode/settings.json",
+        "commitlint.config.mjs",
+        "package.json"
+    ]
+}

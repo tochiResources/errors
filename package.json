@@ -1,0 +1,52 @@
+{
+    "name": "@tochii/errors",
+    "version": "0.1.0",
+    "description": "Shared typed errors and stable error codes (TypeScript + C#).",
+    "license": "MIT",
+    "author": "T0chi",
+    "type": "module",
+    "scripts": {
+        "build": "tsdown --config-loader unrun",
+        "format": "dbx fmt",
+        "lint": "dbx lint --fix",
+        "check": "dbx check",
+        "test": "vitest run",
+        "typecheck": "tsc -p tsconfig.build.json --noEmit",
+        "dbx": "dbx",
+        "commitlint": "commitlint",
+        "prepare": "husky"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^21.2.2",
+        "@commitlint/config-conventional": "^21.2.2",
+        "@deltabox/toolchain": "^1.11.3",
+        "@types/node": "catalog:",
+        "@typescript/native-preview": "catalog:",
+        "husky": "^9.1.7",
+        "tsdown": "catalog:",
+        "tsx": "catalog:",
+        "typescript": "catalog:",
+        "unrun": "^0.3.1",
+        "vite": "catalog:",
+        "vite-plus": "^1.2.0",
+        "vitest": "catalog:"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "packageManager": "yarn@4.17.1",
+    "engines": {
+        "node": ">=22.5.0"
+    },
+    "files": [
+        "dist",
+        "csharp"
+    ],
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": "./dist/index.js",
+        "./codes": "./dist/codes.js",
+        "./serialize": "./dist/serialize.js",
+        "./package.json": "./package.json"
+    }
+}
