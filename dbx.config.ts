@@ -20,6 +20,7 @@ export default defineConfig({
             packageManagerVersion: '4.17.1',
         },
         changelog: {
+            branches: { dev: 'dev' },
             scopes: ['errors', 'ci', 'release', 'deps'],
             workflows: {
                 release: true,
