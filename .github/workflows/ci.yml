@@ -2,9 +2,17 @@
 name: CI
 on:
   push:
-    branches: [main, dev]
+    branches: [main]
   pull_request:
-    branches: [release/**, feat/**, feature/**, fix/**, chore/**]
+    branches:
+      - main
+      - dev
+      - release/**
+      - feat/**
+      - feature/**
+      - fix/**
+      - chore/**
+      - dependabot/**
 jobs:
   ci:
     runs-on: ubuntu-latest

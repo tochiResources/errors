@@ -39,7 +39,20 @@ export default defineConfig({
             branches: { dev: 'dev' },
             scopes: ['errors', 'ci', 'release', 'deps'],
             workflows: {
-                ci: { pushBranches: ['main', 'dev'] },
+                sync: true,
+                issues: true,
+                ci: {
+                    pullRequestBranches: [
+                        'main',
+                        'dev',
+                        'release/**',
+                        'feat/**',
+                        'feature/**',
+                        'fix/**',
+                        'chore/**',
+                        'dependabot/**',
+                    ],
+                },
                 changelog: true,
                 release: {
                     extra: {
