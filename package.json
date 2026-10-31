@@ -1,6 +1,6 @@
 {
     "name": "@tochii/errors",
-    "version": "0.1.9",
+    "version": "0.1.10",
     "description": "Shared typed errors and stable error codes used in official tochiResources proejcts.",
     "license": "MIT",
     "author": "T0chi",

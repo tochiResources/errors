@@ -1,14 +1,19 @@
 # Changelog
 
-## 0.1.9 (October 2026)
+## 0.1.10 (October 2026)
 
 <!-- release:start -->
 
 ### CI
-- Update `nuget.yml` ([#a6100d3](https://github.com/tochiResources/errors/commit/a6100d3) by [T0chi](https://github.com/T0chi))
+- Update `nuget.yml` ([#c1eb959](https://github.com/tochiResources/errors/commit/c1eb959) by [T0chi](https://github.com/T0chi))
 
 <!-- release:end -->
 
+
+## 0.1.9 (October 2026)
+
+### CI
+- Update `nuget.yml` ([#a6100d3](https://github.com/tochiResources/errors/commit/a6100d3) by [T0chi](https://github.com/T0chi))
 
 ## 0.1.8 (October 2026)
 
