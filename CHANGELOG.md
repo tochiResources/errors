@@ -1,14 +1,20 @@
 # Changelog
 
-## 0.1.6 (October 2026)
+## 0.1.7 (October 2026)
 
 <!-- release:start -->
 
-### CI
-- Updated workflows ([#b1a1b89](https://github.com/tochiResources/errors/commit/b1a1b89) by [T0chi](https://github.com/T0chi))
+### Bug fixes
+#### Ci
+- Change trigger for `nuget.yml` workflow to `release` ([#582ad2c](https://github.com/tochiResources/errors/commit/582ad2c) by [T0chi](https://github.com/T0chi))
 
 <!-- release:end -->
 
+
+## 0.1.6 (October 2026)
+
+### CI
+- Updated workflows ([#b1a1b89](https://github.com/tochiResources/errors/commit/b1a1b89) by [T0chi](https://github.com/T0chi))
 
 ## 0.1.5 (October 2026)
 
