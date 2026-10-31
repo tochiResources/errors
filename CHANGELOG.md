@@ -1,15 +1,20 @@
 # Changelog
 
-## 0.1.8 (October 2026)
+## 0.1.9 (October 2026)
 
 <!-- release:start -->
+
+### CI
+- Update `nuget.yml` ([#a6100d3](https://github.com/tochiResources/errors/commit/a6100d3) by [T0chi](https://github.com/T0chi))
+
+<!-- release:end -->
+
+
+## 0.1.8 (October 2026)
 
 ### Bug fixes
 #### Ci
 - Resynced with `dbx sync` to avoid drift ([#1c6f358](https://github.com/tochiResources/errors/commit/1c6f358) by [T0chi](https://github.com/T0chi))
-
-<!-- release:end -->
-
 
 ## 0.1.7 (October 2026)
 
