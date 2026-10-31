@@ -56,7 +56,11 @@ export default defineConfig({
                 changelog: true,
                 release: {
                     extra: {
-                        permissions: { contents: 'write', 'id-token': 'write' },
+                        permissions: {
+                            contents: 'write',
+                            'id-token': 'write',
+                            actions: 'write',
+                        },
                         concurrency: { group: 'release', 'cancel-in-progress': false },
                     },
                     jobs: {
@@ -147,6 +151,12 @@ export default defineConfig({
                                         'fi',
                                     ].join('\n'),
                                 },
+                                {
+                                    name: 'Dispatch NuGet publish',
+                                    if: "steps.release.outputs.skip == 'false'",
+                                    env: { GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
+                                    run: 'gh workflow run nuget.yml --ref "v${{ steps.release.outputs.version }}"',
+                                },
                             ],
                         },
                     },
@@ -159,19 +169,14 @@ export default defineConfig({
 function ensureNugetReleaseWorkflow() {
     return `name: Publish NuGet
 on:
-  release:
-    types: [published]
-  workflow_dispatch:
+  workflow_dispatch: null
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
-  publish:
+  pack:
     runs-on: ubuntu-latest
-    environment: release
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -194,13 +199,40 @@ jobs:
       - name: Pack
         run: dotnet pack csharp/TochiRes.Errors.csproj -c Release -o artifacts
 
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          path: artifacts/*
+
+  publish-nuget-org:
+    name: Publish to NuGet.org
+    needs: pack
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Download package artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget-package
+          path: artifacts
+
       - name: NuGet login (OIDC)
         id: login
         uses: NuGet/login@v1
         with:
           user: \${{ secrets.NUGET_USER }}
 
-      - name: Push to NuGet
+      - name: Push to NuGet.org
         run: dotnet nuget push artifacts/*.nupkg --api-key "\${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
 `;
 }
