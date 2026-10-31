@@ -159,9 +159,10 @@ export default defineConfig({
 function ensureNugetReleaseWorkflow() {
     return `name: Publish NuGet
 on:
-  release:
-    types: [published]
-  workflow_dispatch:
+  push:
+    tags: ['v*']
+  workflow_dispatch: null
+  pull_request: null
 
 permissions:
   contents: read
