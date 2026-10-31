@@ -2,22 +2,48 @@
 
 [![tests](https://img.shields.io/github/actions/workflow/status/tochiResources/errors/ci.yml?label=tests&logo=github)](https://github.com/tochiResources/errors/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/@tochii/errors.svg?color=cb3837&label=npm)](https://www.npmjs.com/package/@tochii/errors)
+[![NuGet Version](https://img.shields.io/nuget/vpre/TochiRes.Errors?color=0956cc&label=NuGet)](https://www.nuget.org/packages/TochiRes.Errors)
 
-Shared typed errors and stable error codes used in official tochiResources proejcts.
-
-- **Stable codes**: the string value is part of the contract; never reuse or rename one. Both TS and C# switch on it.
-- **Typed classes**: `instanceof ConfigError`, `instanceof IpcError`, per domain, all extending `TochiResError`.
-- **Serializable**: `serializeError` / `deserializeError` move errors across JSON-RPC unchanged (message, code, context, cause chain).
-- **Context**: every error can carry structured `context` for logging/telemetry.
+Shared typed errors and stable error codes used in official `tochiResources` projects.
 
 ## Projects using @tochii/errors
 
 - [AeToOsb](https://github.com/tochiResources/AeToOsb)
 - [AeBrew](https://github.com/tochiResources/AeBrew)
-- [osu! Storyboarding toolkit](https://github.com/tochiResources/osb-toolkit)
+- [osu! Storyboarding Toolkit](https://github.com/tochiResources/osb-toolkit)
 - [tochiResources Adobe CEP](https://github.com/tochiResources/cep)
 
+## Installation
+
+### JS/TS
+
+```sh
+npm install @tochii/errors
+```
+
+Or with another package manager:
+
+```sh
+pnpm add @tochii/errors
+yarn add @tochii/errors
+bun add @tochii/errors
+```
+
+### C#
+
+```sh
+dotnet add package TochiRes.Errors
+```
+
+Or add it directly to the project file:
+
+```xml
+<PackageReference Include="TochiRes.Errors" Version="<nuget-version>" />
+```
+
 ## Usage
+
+### JS/TS
 
 ```ts
 import { ConfigError, ErrorCode, isTochiResError, serializeError } from '@tochii/errors';
@@ -35,9 +61,40 @@ try {
 }
 ```
 
+### C#
+
+```csharp
+using System;
+using System.Collections.Generic;
+using TochiRes.Errors;
+
+try
+{
+    throw new ConfigException(
+        ErrorCodes.ConfigMissing,
+        "app.name is required",
+        context: new Dictionary<string, object?> { ["field"] = "name" });
+}
+catch (TochiResException error)
+{
+    Console.Error.WriteLine($"{error.Code} ({error.Category}): {error.Message}");
+
+    if (error.Context is not null)
+    {
+        Console.Error.WriteLine($"context: {error.Context}");
+    }
+}
+```
+
 ## Development
 
-- **node 22.5+**, **yarn 4**, **vitest 5**, **tsdown**
+### Requirements
+
+- **Node.js** 22.5+
+- **Yarn** 4
+- **.NET SDK** 8+ (10.x is used in CI for the C# package)
+
+### Scrips
 
 ```sh
 yarn install
