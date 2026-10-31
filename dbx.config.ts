@@ -19,14 +19,6 @@ export default defineConfig({
             packageManager: 'yarn',
             packageManagerVersion: '4.17.1',
         },
-        changelog: {
-            branches: { dev: 'dev' },
-            scopes: ['errors', 'ci', 'release', 'deps'],
-            workflows: {
-                release: true,
-                changelog: true,
-            },
-        },
         hooks: {
             beforeSync: () => {
                 addNugetWorkflow = true;
@@ -41,7 +33,112 @@ export default defineConfig({
                     return files;
                 };
             },
-        }
+        },
+        changelog: {
+            vscode: true,
+            branches: { dev: 'dev' },
+            scopes: ['errors', 'ci', 'release', 'deps'],
+            workflows: {
+                changelog: true,
+                release: {
+                    extra: {
+                        permissions: { contents: 'write', 'id-token': 'write' },
+                        concurrency: { group: 'release', 'cancel-in-progress': false },
+                    },
+                    jobs: {
+                        'create-release-pr': {
+                            name: 'release',
+                            'runs-on': 'ubuntu-latest',
+                            environment: 'release',
+                            steps: [
+                                {
+                                    name: 'Checkout',
+                                    uses: 'actions/checkout@v4',
+                                    with: {
+                                        'fetch-depth': 0,
+                                        token: '${{ secrets.GITHUB_TOKEN }}',
+                                    },
+                                },
+                                {
+                                    name: 'Setup Node',
+                                    uses: 'actions/setup-node@v4',
+                                    with: {
+                                        'node-version': '{{nodeVersion}}',
+                                        'registry-url': 'https://registry.npmjs.org',
+                                    },
+                                },
+                                {
+                                    name: 'Enable Corepack',
+                                    run: 'corepack enable\ncorepack prepare {{packageManager}}@{{yarnVersion}} --activate',
+                                },
+                                {
+                                    name: 'Install dependencies',
+                                    run: '{{packageManager}} install --immutable',
+                                },
+                                { name: 'Build', run: '{{packageManager}} build' },
+                                {
+                                    name: 'Resolve version + release state',
+                                    id: 'release',
+                                    run: [
+                                        'version="$(node -p "require(\'./package.json\').version")"',
+                                        'echo "version=$version" >> "$GITHUB_OUTPUT"',
+                                        'if git ls-remote --exit-code --tags origin "v$version" >/dev/null 2>&1; then',
+                                        '  echo "Release v$version already exists; skipping."',
+                                        '  echo "skip=true" >> "$GITHUB_OUTPUT"',
+                                        'else',
+                                        '  echo "skip=false" >> "$GITHUB_OUTPUT"',
+                                        'fi',
+                                    ].join('\n'),
+                                },
+                                {
+                                    name: 'Extract release notes',
+                                    if: "steps.release.outputs.skip == 'false'",
+                                    run: [
+                                        'last_tag="$(git describe --tags --abbrev=0 2>/dev/null || true)"',
+                                        'if [ -n "$last_tag" ]; then',
+                                        '  last_version="${last_tag#v}"',
+                                        '  notes="$(awk -v v="$last_version" \'/^## / { if ($2 == v) exit; started = 1 } started { print }\' CHANGELOG.md 2>/dev/null || true)"',
+                                        'else',
+                                        '  notes="$(cat CHANGELOG.md 2>/dev/null || true)"',
+                                        'fi',
+                                        '[ -n "$notes" ] || notes="Release v${{ steps.release.outputs.version }}"',
+                                        'printf \'%s\\n\' "$notes" > RELEASE_NOTES.md',
+                                    ].join('\n'),
+                                },
+                                {
+                                    name: 'Create the GitHub Release',
+                                    if: "steps.release.outputs.skip == 'false'",
+                                    env: { GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}' },
+                                    run: [
+                                        'gh release create "v${{ steps.release.outputs.version }}" \\',
+                                        '  --title "v${{ steps.release.outputs.version }}" \\',
+                                        '  --notes-file RELEASE_NOTES.md \\',
+                                    ].join('\n'),
+                                },
+                                {
+                                    name: 'Upgrade npm for trusted publishing',
+                                    if: "steps.release.outputs.skip == 'false'",
+                                    run: 'npm install -g npm@^11.15.1',
+                                },
+                                {
+                                    name: 'Publish to npm (fallback: staged)',
+                                    if: "steps.release.outputs.skip == 'false'",
+                                    run: [
+                                        '{{packageManager}} pack --out package.tgz',
+                                        'if npm publish package.tgz --access public; then',
+                                        '  echo "Published to npm."',
+                                        'else',
+                                        '  echo "::warning::Direct publish failed; falling back to a staged publish."',
+                                        '  npm stage publish package.tgz --access public',
+                                        'fi',
+                                    ].join('\n'),
+                                },
+                            ],
+                        },
+                    },
+                },
+            },
+        },
     },
 });
 

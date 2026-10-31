@@ -15,6 +15,7 @@ bin/
 obj/
 artifacts/
 *.tsbuildinfo
+package.tgz
 
 # Yarn
 .pnp.*

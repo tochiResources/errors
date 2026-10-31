@@ -6,16 +6,15 @@ on:
   workflow_dispatch: null
 permissions:
   contents: write
-  pull-requests: write
+  id-token: write
 concurrency:
   group: release
   cancel-in-progress: false
 jobs:
   create-release-pr:
+    name: release
     runs-on: ubuntu-latest
-    if: "(github.event_name == 'push' || github.event_name == 'workflow_dispatch') && !startsWith(github.event.head_commit.message, 'chore: version packages ') && !startsWith(github.event.head_commit.message, 'release: ')"
-    env:
-      GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+    environment: release
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,28 +25,29 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+          registry-url: https://registry.npmjs.org
       - name: Enable Corepack
         run: |
           corepack enable
           corepack prepare yarn@4.17.1 --activate
       - name: Install dependencies
         run: yarn install --immutable
-      - name: Open release PR
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Build
+        run: yarn build
+      - name: Resolve version + release state
+        id: release
         run: |
-          set -euo pipefail
           version="$(node -p "require('./package.json').version")"
-          branch="release/$version"
-          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
-            echo "Release PR already open for $version."; exit 0
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if git ls-remote --exit-code --tags origin "v$version" >/dev/null 2>&1; then
+            echo "Release v$version already exists; skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$branch"
-          git add -A
-          git commit -m "chore: version packages ($version)" || true
-          git push origin "$branch"
+      - name: Extract release notes
+        if: steps.release.outputs.skip == 'false'
+        run: |
           last_tag="$(git describe --tags --abbrev=0 2>/dev/null || true)"
           if [ -n "$last_tag" ]; then
             last_version="${last_tag#v}"
@@ -55,5 +55,26 @@ jobs:
           else
             notes="$(cat CHANGELOG.md 2>/dev/null || true)"
           fi
-          [ -n "$notes" ] || notes="Release $version"
-          gh pr create --base main --head "$branch" --title "release: $version" --body "$notes"
+          [ -n "$notes" ] || notes="Release v${{ steps.release.outputs.version }}"
+          printf '%s\n' "$notes" > RELEASE_NOTES.md
+      - name: Create the GitHub Release
+        if: steps.release.outputs.skip == 'false'
+        env:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        run: |
+          gh release create "v${{ steps.release.outputs.version }}" \
+            --title "v${{ steps.release.outputs.version }}" \
+            --notes-file RELEASE_NOTES.md \
+      - name: Upgrade npm for trusted publishing
+        if: steps.release.outputs.skip == 'false'
+        run: npm install -g npm@^11.15.1
+      - name: "Publish to npm (fallback: staged)"
+        if: steps.release.outputs.skip == 'false'
+        run: |
+          yarn pack --out package.tgz
+          if npm publish package.tgz --access public; then
+            echo "Published to npm."
+          else
+            echo "::warning::Direct publish failed; falling back to a staged publish."
+            npm stage publish package.tgz --access public
+          fi

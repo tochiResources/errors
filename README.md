@@ -1,5 +1,8 @@
 # @tochii/errors
 
+[![tests](https://img.shields.io/github/actions/workflow/status/tochiResources/errors/ci.yml?label=tests&logo=github)](https://github.com/tochiResources/errors/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/@tochii/errors.svg?color=cb3837&label=npm)](https://www.npmjs.com/package/@tochii/errors)
+
 Shared typed errors and stable error codes used in official tochiResources proejcts.
 
 - **Stable codes**: the string value is part of the contract; never reuse or rename one. Both TS and C# switch on it.
