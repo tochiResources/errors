@@ -1,17 +1,22 @@
 # Changelog
 
-## 0.1.11 (October 2026)
+## 0.1.12 (October 2026)
 
 <!-- release:start -->
+
+### Chores
+- Update `README.md` ([#159cae2](https://github.com/tochiResources/errors/commit/159cae2) by [T0chi](https://github.com/T0chi))
+
+<!-- release:end -->
+
+
+## 0.1.11 (October 2026)
 
 ### Bug fixes
 #### Ci
 - `nuget.yml` now triggers after `release.yml` ([#fb056ff](https://github.com/tochiResources/errors/commit/fb056ff) by [T0chi](https://github.com/T0chi))
 ### CI
 - Update `nuget.yml` ([#a1810f0](https://github.com/tochiResources/errors/commit/a1810f0) by [T0chi](https://github.com/T0chi))
-
-<!-- release:end -->
-
 
 ## 0.1.10 (October 2026)
 
