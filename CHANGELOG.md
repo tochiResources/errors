@@ -1,14 +1,19 @@
 # Changelog
 
-## 0.1.3 (October 2026)
+## 0.1.4 (October 2026)
 
 <!-- release:start -->
 
-### Chores
-- Set package to public ([#a8428d3](https://github.com/tochiResources/errors/commit/a8428d3) by [T0chi](https://github.com/T0chi))
+### CI
+- Updated workflows ([#b2e3380](https://github.com/tochiResources/errors/commit/b2e3380) by [T0chi](https://github.com/T0chi))
 
 <!-- release:end -->
 
+
+## 0.1.3 (October 2026)
+
+### Chores
+- Set package to public ([#a8428d3](https://github.com/tochiResources/errors/commit/a8428d3) by [T0chi](https://github.com/T0chi))
 
 ## 0.1.2 (October 2026)
 
