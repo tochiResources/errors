@@ -160,7 +160,10 @@ function ensureNugetReleaseWorkflow() {
     return `name: Publish NuGet
 on:
   push:
-    tags: ['v*']
+    branches-ignore:
+      - '*'
+    tags:
+      - 'v*'
   workflow_dispatch: null
   pull_request: null
 
