@@ -1,14 +1,19 @@
 # Changelog
 
-## 0.1.4 (October 2026)
+## 0.1.5 (October 2026)
 
 <!-- release:start -->
 
 ### CI
-- Updated workflows ([#b2e3380](https://github.com/tochiResources/errors/commit/b2e3380) by [T0chi](https://github.com/T0chi))
+- Added `dev` to `ci.yml`'s push branches ([#ff15308](https://github.com/tochiResources/errors/commit/ff15308) by [T0chi](https://github.com/T0chi))
 
 <!-- release:end -->
 
+
+## 0.1.4 (October 2026)
+
+### CI
+- Updated workflows ([#b2e3380](https://github.com/tochiResources/errors/commit/b2e3380) by [T0chi](https://github.com/T0chi))
 
 ## 0.1.3 (October 2026)
 
